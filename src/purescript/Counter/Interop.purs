@@ -1,10 +1,10 @@
 module Counter.Interop where
 
 import Prelude
-import Counter (Props, counter)
+import Counter (Props, component, render, initialState)
 import Data.Maybe (fromMaybe)
 import Data.Nullable (Nullable, toMaybe)
-import React (ReactElement)
+import React.Basic (ReactComponent, toReactComponent)
 
 type JSProps
   = { label :: Nullable String }
@@ -12,5 +12,5 @@ type JSProps
 jsPropsToProps :: JSProps -> Props
 jsPropsToProps { label } = { label: fromMaybe "Count" $ toMaybe label }
 
-jsCounter :: JSProps -> ReactElement
-jsCounter = counter <<< jsPropsToProps
+jsCounter :: ReactComponent JSProps
+jsCounter = toReactComponent jsPropsToProps component { initialState, render }
