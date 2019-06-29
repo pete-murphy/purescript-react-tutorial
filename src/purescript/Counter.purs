@@ -1,40 +1,22 @@
 module Counter where
 
 import Prelude
-import React
-  ( ReactClass
-  , ReactElement
-  , ReactThis
-  , component
-  , createLeafElement
-  , getProps
-  , getState
-  , setState
-  )
-import React.DOM as D
-import React.DOM.Props as P
+import React.Basic (JSX, createComponent, make)
+import React.Basic.DOM as R
+import React.Basic.DOM.Events (capture_)
 
 type Props
   = { label :: String }
 
-type State
-  = { count :: Int }
+counter :: Props -> JSX
+counter = make (createComponent "Counter") { initialState, render }
+  where
+  initialState = { count: 0 }
 
-counter :: Props -> ReactElement
-counter = createLeafElement counterClass
-
-counterClass :: ReactClass Props
-counterClass =
-  component "Counter" \(this :: ReactThis Props State) -> do
-    let
-      render = do
-        state <- getState this
-        props <- getProps this
-        pure
-          $ D.button
-              [ P.onClick \_ -> setState this { count: state.count + 1 } ]
-              [ D.text $ props.label <> ": " <> show state.count ]
-    pure
-      { state: { count: 0 }
-      , render
+  render self =
+    R.button
+      { onClick:
+        capture_ $ self.setState \s -> s { count = s.count + 1 }
+      , children:
+        [ R.text $ self.props.label <> " " <> show self.state.count ]
       }
