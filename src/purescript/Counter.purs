@@ -25,7 +25,7 @@ counter = createLeafElement counterClass
 
 counterClass :: ReactClass Props
 counterClass =
-  component "Counter" \(this:: ReactThis Props State) -> do
+  component "Counter" \(this :: ReactThis Props State) -> do
     let
       render = do
         state <- getState this
