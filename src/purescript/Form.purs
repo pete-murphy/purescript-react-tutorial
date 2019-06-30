@@ -25,10 +25,10 @@ useInputs initialValues = React.do
   let
     handleChange field =
       handler
-        targetValue \targetValue -> do
+        targetValue \value -> do
         setValues \_ -> case field of
-          "name" -> values { name = fromMaybe "" targetValue }
-          "email" -> values { email = fromMaybe "" targetValue }
+          "name" -> values { name = fromMaybe "" value }
+          "email" -> values { email = fromMaybe "" value }
           _ -> values
   pure (values /\ handleChange)
 
