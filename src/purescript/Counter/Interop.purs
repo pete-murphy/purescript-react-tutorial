@@ -1,14 +1,12 @@
 module Counter.Interop where
 
 import Prelude
-
-import Counter (CounterType(..), Props, counter, counterTypeFromString, foo)
+import Counter (CounterType(..), Props, counterTypeFromString, renderCounter)
 import Data.Maybe (fromMaybe)
 import Data.Nullable (Nullable, toMaybe)
-import Effect (Effect)
 import Effect.Uncurried (EffectFn1, runEffectFn1)
-import React.Basic (JSX, ReactComponent, make, toReactComponent)
-import React.Basic.Hooks (CreateComponent, Render, UseState)
+import Effect.Unsafe (unsafePerformEffect)
+import React.Basic.Hooks (ReactComponent, component)
 
 type JSProps
   = { label :: Nullable String
@@ -29,4 +27,5 @@ jsPropsToProps props =
   deriveLabelFromType :: Nullable String -> String
   deriveLabelFromType = fromMaybe "Count" <<< toMaybe
 
-
+mkJsCounter :: ReactComponent JSProps
+mkJsCounter = unsafePerformEffect $ component "Counter" (renderCounter <<< jsPropsToProps)
