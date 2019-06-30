@@ -19,7 +19,11 @@ type Person
     , email :: String
     }
 
-useInputs :: Person -> Hook UseInputs (Tuple Person (String -> EventHandler))
+data Field
+  = Name
+  | Email
+
+useInputs :: Person -> Hook UseInputs (Tuple Person (Field -> EventHandler))
 useInputs initialValues = React.do
   values /\ setValues <- useState initialValues
   let
@@ -27,9 +31,8 @@ useInputs initialValues = React.do
       handler
         targetValue \value -> do
         setValues \_ -> case field of
-          "name" -> values { name = fromMaybe "" value }
-          "email" -> values { email = fromMaybe "" value }
-          _ -> values
+          Name -> values { name = fromMaybe "" value }
+          Email -> values { email = fromMaybe "" value }
   pure (values /\ handleChange)
 
 renderForm :: {} -> Render Unit (UseInputs Unit) JSX
@@ -46,13 +49,13 @@ renderForm _ = React.do
             { type: "text"
             , value: values.name
             , name: "name"
-            , onChange: handleChange "name"
+            , onChange: handleChange Name
             }
         , R.input
             { type: "email"
             , value: values.email
             , name: "email"
-            , onChange: handleChange "email"
+            , onChange: handleChange Email
             }
         , R.pre_ [ R.text $ show values ]
         ]
