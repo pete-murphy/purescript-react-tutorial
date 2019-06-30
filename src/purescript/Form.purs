@@ -1,18 +1,12 @@
 module Form where
 
 import Prelude
-
-import Data.Maybe (Maybe(..), fromMaybe)
-import Data.Nullable (toMaybe)
+import Data.Maybe (fromMaybe)
 import React.Basic.DOM as R
 import React.Basic.DOM.Events (targetValue)
-import React.Basic.Events (EventFn, EventHandler, SyntheticEvent, handler, merge, unsafeEventFn)
+import React.Basic.Events (EventHandler, handler)
 import React.Basic.Hooks (CreateComponent, Hook, JSX, Render, Tuple, UseState, component, useState, (/\))
 import React.Basic.Hooks as React
-import Unsafe.Coerce (unsafeCoerce)
-
-targetName :: EventFn SyntheticEvent (Maybe String)
-targetName = unsafeEventFn \e -> toMaybe (unsafeCoerce e).target.name
 
 mkForm :: CreateComponent {}
 mkForm = component "Form" renderForm
@@ -25,16 +19,16 @@ type Person
     , email :: String
     }
 
-useInputs :: Person -> Hook UseInputs (Tuple Person EventHandler)
+useInputs :: Person -> Hook UseInputs (Tuple Person (String -> EventHandler))
 useInputs initialValues = React.do
-  values /\ replaceValues <- useState initialValues
+  values /\ setValues <- useState initialValues
   let
-    handleChange =
+    handleChange field =
       handler
-        (merge { targetValue, targetName }) \e -> do
-        replaceValues \_ -> case e.targetName of
-          Just "name" -> values { name = fromMaybe "" e.targetValue }
-          Just "email" -> values { email = fromMaybe "" e.targetValue }
+        targetValue \targetValue -> do
+        setValues \_ -> case field of
+          "name" -> values { name = fromMaybe "" targetValue }
+          "email" -> values { email = fromMaybe "" targetValue }
           _ -> values
   pure (values /\ handleChange)
 
@@ -52,13 +46,13 @@ renderForm _ = React.do
             { type: "text"
             , value: values.name
             , name: "name"
-            , onChange: handleChange
+            , onChange: handleChange "name"
             }
         , R.input
             { type: "email"
             , value: values.email
             , name: "email"
-            , onChange: handleChange
+            , onChange: handleChange "email"
             }
         , R.pre_ [ R.text $ show values ]
         ]
