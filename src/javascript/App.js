@@ -1,5 +1,6 @@
 import React from "react";
 import { mkJsCounter as Counter } from "../output/Counter.Interop";
+import { mkJsForm as Form } from "../output/Form.Interop";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       />
       <Counter label="Clicks" />
       <Counter label="Interactions" />
+      <Form></Form>
     </div>
   );
 }
