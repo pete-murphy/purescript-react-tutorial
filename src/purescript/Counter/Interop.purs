@@ -28,5 +28,5 @@ jsPropsToProps props =
   deriveLabelFromType :: Nullable String -> String
   deriveLabelFromType = fromMaybe "Count" <<< toMaybe
 
-mkJsCounter :: ReactComponent JSProps
-mkJsCounter = unsafePerformEffect $ component "Counter" (renderCounter <<< jsPropsToProps)
+jsCounter :: ReactComponent JSProps
+jsCounter = unsafePerformEffect $ component "Counter" (renderCounter <<< jsPropsToProps)
