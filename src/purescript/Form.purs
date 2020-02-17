@@ -2,13 +2,15 @@ module Form where
 
 import Prelude
 import Data.Maybe (fromMaybe)
+import Effect (Effect)
+import React.Basic (ReactComponent)
 import React.Basic.DOM as R
 import React.Basic.DOM.Events (targetValue)
 import React.Basic.Events (EventHandler, handler)
-import React.Basic.Hooks (CreateComponent, Hook, JSX, Render, Tuple, UseState, component, useState, (/\))
+import React.Basic.Hooks (Hook, JSX, Render, UseState, component, useState, (/\), type (/\))
 import React.Basic.Hooks as React
 
-mkForm :: CreateComponent {}
+mkForm :: Effect (ReactComponent {})
 mkForm = component "Form" renderForm
 
 type UseInputs
@@ -23,7 +25,7 @@ data Field
   = Name
   | Email
 
-useInputs :: Person -> Hook UseInputs (Tuple Person (Field -> EventHandler))
+useInputs :: Person -> Hook UseInputs (Person /\ (Field -> EventHandler))
 useInputs initialValues = React.do
   values /\ setValues <- useState initialValues
   let

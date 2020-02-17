@@ -12,7 +12,7 @@ function App() {
       />
       <Counter label="Clicks" />
       <Counter label="Interactions" />
-      <Form></Form>
+      <Form />
     </div>
   );
 }

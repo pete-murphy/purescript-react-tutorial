@@ -1,9 +1,10 @@
 module Counter.Interop where
 
 import Prelude
-import Counter (CounterType(..), Props, counterTypeFromString, renderCounter)
+import Counter (CounterType(..), Props, renderCounter)
 import Data.Maybe (fromMaybe)
 import Data.Nullable (Nullable, toMaybe)
+import Data.String.Read (read)
 import Effect.Uncurried (EffectFn1, runEffectFn1)
 import Effect.Unsafe (unsafePerformEffect)
 import React.Basic.Hooks (ReactComponent, component)
@@ -21,7 +22,7 @@ jsPropsToProps props =
   , onClick:
     fromMaybe mempty $ map runEffectFn1 $ toMaybe props.onClick
   , counterType:
-    fromMaybe Increment $ counterTypeFromString =<< toMaybe props.counterType
+    fromMaybe Increment $ read =<< toMaybe props.counterType
   }
   where
   deriveLabelFromType :: Nullable String -> String

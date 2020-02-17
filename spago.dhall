@@ -2,18 +2,15 @@
 Welcome to a Spago project!
 You can edit this file as you like.
 -}
-{ name =
-    "my-project"
+{ name = "react-tutorial"
 , dependencies =
-    [ "console"
-    , "effect"
-    , "psci-support"
-    , "react"
-    , "react-basic"
-    , "react-basic-hooks"
-    ]
-, packages =
-    ./packages.dhall
-, sources =
-    [ "src/**/*.purs", "test/**/*.purs" ]
+  [ "console"
+  , "effect"
+  , "generics-rep"
+  , "psci-support"
+  , "react-basic-hooks"
+  , "read"
+  ]
+, packages = ./packages.dhall
+, sources = [ "src/**/*.purs", "test/**/*.purs" ]
 }

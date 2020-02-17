@@ -1,11 +1,14 @@
 module Counter where
 
 import Prelude
+import Data.Generic.Rep (class Generic)
+import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..))
+import Data.String.Read (class Read)
 import Effect (Effect)
 import React.Basic.DOM as R
 import React.Basic.DOM.Events (capture_)
-import React.Basic.Hooks (CreateComponent, JSX, Render, UseState, component, useState, (/\))
+import React.Basic.Hooks (JSX, ReactComponent, Render, UseState, component, useState, (/\))
 import React.Basic.Hooks as React
 
 type Props
@@ -18,18 +21,18 @@ data CounterType
   = Increment
   | Decrement
 
-counterTypeToString :: CounterType -> String
-counterTypeToString Increment = "Increment"
+derive instance genericCounterType :: Generic CounterType _
 
-counterTypeToString Decrement = "Decrement"
+instance showCounterType :: Show CounterType where
+  show = genericShow
 
-counterTypeFromString :: String -> Maybe CounterType
-counterTypeFromString = case _ of
-  "Increment" -> Just Increment
-  "Decrement" -> Just Decrement
-  _ -> Nothing
+instance readCounterType :: Read CounterType where
+  read = case _ of
+    "Increment" -> Just Increment
+    "Decrement" -> Just Decrement
+    _ -> Nothing
 
-mkCounter :: CreateComponent Props
+mkCounter :: Effect (ReactComponent Props)
 mkCounter = component "Counter" renderCounter
 
 renderCounter :: Props -> Render Unit (UseState Int Unit) JSX
