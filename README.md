@@ -13,7 +13,7 @@ Working through this blog post by Thomas Honeyman: https://thomashoneyman.com/ar
 - Make a symbolic link for PureScript output folder so Create React App webpack server can access it.
 
   ```
-  $ ln -s output src/output
+  $ ln -s $PWD/output $PWD/src/output
   ```
 
 - Run the development server with `yarn start`
