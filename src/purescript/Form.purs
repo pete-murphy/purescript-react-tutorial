@@ -3,7 +3,7 @@ module Form where
 import Prelude
 import Data.Maybe (fromMaybe)
 import Effect (Effect)
-import React.Basic (ReactComponent)
+import React.Basic (ReactComponent, fragment)
 import React.Basic.DOM as R
 import React.Basic.DOM.Events (targetValue)
 import React.Basic.Events (EventHandler, handler)
@@ -45,19 +45,40 @@ renderForm _ = React.do
       , email: "janedoe@gmail.com"
       }
   values /\ handleChange <- useInputs initialValues
+  let
+    inputLabel children =
+      R.label
+        { style:
+          R.css
+            { display: "inline-grid"
+            , gridGap: "0.5rem"
+            , gridAutoFlow: "column"
+            , paddingRight: "1rem"
+            }
+        , children
+        }
   pure
-    $ R.form_
-        [ R.input
-            { type: "text"
-            , value: values.name
-            , name: "name"
-            , onChange: handleChange Name
-            }
-        , R.input
-            { type: "email"
-            , value: values.email
-            , name: "email"
-            , onChange: handleChange Email
-            }
-        , R.pre_ [ R.text $ show values ]
+    $ fragment
+        [ R.h2_ [ R.text "Form example" ]
+        , R.form_
+            [ inputLabel
+                [ R.text "Name"
+                , R.input
+                    { type: "text"
+                    , value: values.name
+                    , name: "name"
+                    , onChange: handleChange Name
+                    }
+                ]
+            , inputLabel
+                [ R.text "Email"
+                , R.input
+                    { type: "email"
+                    , value: values.email
+                    , name: "email"
+                    , onChange: handleChange Email
+                    }
+                ]
+            , R.pre_ [ R.text $ show values ]
+            ]
         ]
