@@ -8,7 +8,7 @@ import Data.String.Read (class Read)
 import Effect (Effect)
 import React.Basic.DOM as R
 import React.Basic.DOM.Events (capture_)
-import React.Basic.Hooks (JSX, ReactComponent, Render, UseState, component, useState, (/\))
+import React.Basic.Hooks (ReactComponent, component, useState, (/\))
 import React.Basic.Hooks as React
 
 type Props
@@ -33,21 +33,19 @@ instance readCounterType :: Read CounterType where
     _ -> Nothing
 
 mkCounter :: Effect (ReactComponent Props)
-mkCounter = component "Counter" renderCounter
-
-renderCounter :: Props -> Render Unit (UseState Int Unit) JSX
-renderCounter props = React.do
-  count /\ setCount <- useState 0
-  pure
-    $ R.button
-        { onClick:
-          capture_ do
-            let
-              newCount = case props.counterType of
-                Increment -> count + 1
-                Decrement -> count - 1
-            setCount \_ -> newCount
-            props.onClick newCount
-        , children:
-          [ R.text $ props.label <> " " <> show count ]
-        }
+mkCounter =
+  component "Counter" \props -> React.do
+    count /\ setCount <- useState 0
+    pure
+      $ R.button
+          { onClick:
+              capture_ do
+                let
+                  newCount = case props.counterType of
+                    Increment -> count + 1
+                    Decrement -> count - 1
+                setCount \_ -> newCount
+                props.onClick newCount
+          , children:
+              [ R.text $ props.label <> " " <> show count ]
+          }
