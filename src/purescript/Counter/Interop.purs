@@ -2,12 +2,15 @@ module Counter.Interop where
 
 import Prelude
 import Counter (CounterType(..), Props, renderCounter)
-import Data.Maybe (fromMaybe)
-import Data.Nullable (Nullable, toMaybe)
-import Data.String.Read (read)
-import Effect.Uncurried (EffectFn1, runEffectFn1)
-import Effect.Unsafe (unsafePerformEffect)
-import React.Basic.Hooks (ReactComponent, component)
+import Data.Maybe as Maybe
+import Data.Nullable (Nullable)
+import Data.Nullable as Nullable
+import Data.String.Read as Read
+import Effect.Uncurried (EffectFn1)
+import Effect.Uncurried as Uncurried
+import Effect.Unsafe as Unsafe
+import React.Basic.Hooks (JSX)
+import React.Basic.Hooks as React
 
 type JSProps
   = { label :: Nullable String
@@ -18,15 +21,17 @@ type JSProps
 jsPropsToProps :: JSProps -> Props
 jsPropsToProps props =
   { label:
-    fromMaybe (deriveLabelFromType props.counterType) $ toMaybe props.label
+      Maybe.fromMaybe (deriveLabelFromType props.counterType) (Nullable.toMaybe props.label)
   , onClick:
-    fromMaybe mempty $ map runEffectFn1 $ toMaybe props.onClick
+      Maybe.fromMaybe mempty (map Uncurried.runEffectFn1 (Nullable.toMaybe props.onClick))
   , counterType:
-    fromMaybe Increment $ read =<< toMaybe props.counterType
+      Maybe.fromMaybe Increment (Read.read =<< Nullable.toMaybe props.counterType)
   }
   where
   deriveLabelFromType :: Nullable String -> String
-  deriveLabelFromType = fromMaybe "Count" <<< toMaybe
+  deriveLabelFromType = Maybe.fromMaybe "Count" <<< Nullable.toMaybe
 
-jsCounter :: ReactComponent JSProps
-jsCounter = unsafePerformEffect $ component "Counter" (renderCounter <<< jsPropsToProps)
+jsCounter :: JSProps -> JSX
+jsCounter =
+  Unsafe.unsafePerformEffect do
+    React.component "Counter" (renderCounter <<< jsPropsToProps)

@@ -8,6 +8,7 @@ You can edit this file as you like.
   , "effect"
   , "generics-rep"
   , "psci-support"
+  , "react-basic-dom"
   , "react-basic-hooks"
   , "read"
   ]

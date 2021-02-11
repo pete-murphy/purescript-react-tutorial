@@ -2,17 +2,18 @@ module App where
 
 import Prelude
 import Counter (CounterType(..), mkCounter)
-import Effect (Effect)
-import React.Basic (element, JSX)
-import React.Basic.DOM (div_, h1_, text)
+import React.Basic.DOM as R
+import React.Basic.Hooks (Component)
+import React.Basic.Hooks as React
 
-app :: Effect JSX
-app = do
+mkApp :: Component Unit
+mkApp = do
   counter <- mkCounter
-  pure
-    $ div_
-        [ h1_ [ text "My App" ]
-        , element counter
+  React.component "App" \_ -> React.do
+    pure do
+      R.div_
+        [ R.h1_ [ R.text "My App" ]
+        , counter
             { counterType: Increment
             , label: "Count"
             , onClick: mempty
